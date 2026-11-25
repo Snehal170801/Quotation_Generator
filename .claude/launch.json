@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "quatation-frontend-preview",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "Quatation-Frontend",
+      "port": 5174
+    },
+    {
+      "name": "quatation-backend-preview",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "Quatation-Backend",
+      "port": 5000
+    }
+  ]
+}

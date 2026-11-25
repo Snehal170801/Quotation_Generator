@@ -1,0 +1,137 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  admin
+  sales
+}
+
+model User {
+  id          String   @id @default(uuid())
+  name        String
+  email       String   @unique
+  password    String
+  role        UserRole @default(sales)
+  isActive    Boolean  @default(true)
+
+  canAccessSalesPanel Boolean @default(true)
+  canCreateOrder       Boolean @default(true)
+  canFinalizeOrder     Boolean @default(true)
+  canDownloadPDF       Boolean @default(true)
+  canViewOrders        Boolean @default(true)
+
+  orders      Order[]
+  customers   Customer[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Settings {
+  id             String   @id @default(uuid())
+
+  companyName    String   @default("Daccess Systems Private Limited")
+  companyTagline String   @default("Daccess Security Systems Private Limited")
+  companyAddress String   @default("Baner, Pune, Maharashtra, India")
+  companyPhone   String   @default("+91 9999999999")
+  companyEmail   String   @default("sales@daccess.com")
+  companyGst     String   @default("27ABCDE1234F1Z5")
+
+  gstRate        Float    @default(18)
+  validityDays   Int      @default(30)
+  prefix         String   @default("QT")
+  defaultDiscountPercent Float @default(0)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+enum OrderStatus {
+  draft
+  saved
+}
+
+model Order {
+  id               String      @id @default(uuid())
+  quotationNumber  String      @unique
+  customerDetails  Json
+  lineItems        Json
+  subtotal         Float       @default(0)
+  discountPercent  Float       @default(0)
+  discountAmount   Float       @default(0)
+  gstRate          Float       @default(18)
+  gstAmount        Float       @default(0)
+  total            Float       @default(0)
+  status           OrderStatus @default(draft)
+
+  createdBy        User        @relation(fields: [createdById], references: [id])
+  createdById      String
+
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
+
+enum FieldType {
+  text
+  email
+  phone
+  address
+}
+
+model CustomerField {
+  id        String    @id @default(uuid())
+  name      String
+  type      FieldType @default(text)
+  required  Boolean   @default(false)
+  order     Int       @default(0)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Customer {
+  id          String   @id @default(uuid())
+  name        String
+  email       String?
+  phone       String
+  address     String
+
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum CategoryType {
+  product
+  hardware
+  software
+  other
+}
+
+model Category {
+  id        String       @id @default(uuid())
+  name      String
+  type      CategoryType
+  price     Float?
+  isActive  Boolean      @default(true)
+
+  parent    Category?    @relation("CategoryToChildren", fields: [parentId], references: [id])
+  parentId  String?
+  children  Category[]   @relation("CategoryToChildren")
+
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@index([parentId])
+}

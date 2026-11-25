@@ -1,0 +1,41 @@
+{
+  "name": "quatation-backend",
+  "version": "1.0.0",
+  "description": "Quatation Generator Backend API",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --exec tsx src/index.ts",
+    "build": "tsc && mkdir -p dist/docs && cp src/docs/openapi.yaml dist/docs/openapi.yaml",
+    "start": "node dist/index.js",
+    "seed:admin": "tsx src/scripts/seedAdmin.ts",
+    "update:admin-password": "tsx src/scripts/updateAdminPassword.ts",
+    "seed:fields": "tsx src/scripts/seedFields.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "prisma": "^7.8.0",
+    "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^26.0.0",
+    "@types/swagger-ui-express": "^4.1.8",
+    "dotenv": "^17.4.2",
+    "nodemon": "^3.1.14",
+    "tsx": "^4.19.4",
+    "typescript": "^6.0.3"
+  }
+}
